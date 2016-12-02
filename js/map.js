@@ -5,10 +5,10 @@ var map;
 var markers=[];
 
 //timeout function for map if it fails to load
-var mapFail = setTimeout(function(){
+var mapFail = function(){
   alert("Sorry unable to load Google Map");
   $("#map").append('Hey sorry Failed to load the map');
-},8000);
+}
 
 //intialisation of the callback initMap() function
  function initMap() {
