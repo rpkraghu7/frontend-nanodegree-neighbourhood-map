@@ -1,0 +1,47 @@
+
+<html>
+ <head>
+   <title>neighbourhood map</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="css/style.css">
+</head>
+
+ <body>
+  <div class="container">
+    <div data-bind="click :displayMenu">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"/>
+      </svg>
+    </div>
+    <div data-bind="attr: {id: list}" class="listbox">
+      <div class="filter-box">
+        <button class="filter-button" type="button" name="filter" data-bind="click:drop">filter</button>
+        <div  data-bind="attr: {class: dropItem}">
+          <button class="dropdown-button" type="button" name="button" data-bind="click: displayShoopingLocations">Shoping locations</button>
+          <button class="dropdown-button" type="button" name="button" data-bind="click: displayArea" >Areas</button>
+          <button class="dropdown-button" type="button" name="button" data-bind="click: displayAll">Places in chennai</button>
+        </div>
+      </div>
+      <h1>Places to visit</h1>
+      <div class="list">
+        <ul data-bind='foreach: placeList'>
+          <li class="list-item" data-bind='text: name, click: $parent.displayMarker'></li>
+        </ul>
+      </div>
+    </div>
+    <div id="map"></div>
+
+  </div>
+
+  <script src="js/library/jquery.min.js"></script>
+  <script src="js/library/knockout-3.2.0.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- Load the JS API ASYNCHRONOUSLY below.-->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYOVKQPd5Qn-VBQprnqrxRREzQ8YsGGQo&v=3&callback=initMap">
+  </script>
+
+ </body>
+</html>

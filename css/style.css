@@ -1,0 +1,116 @@
+html, body {
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: solid 1px black; }
+
+#map {
+  padding-left: 5%;
+  height: 100%;
+}
+
+.container {
+  height: 100%;
+}
+
+.listbox {
+  background-color: #e8eaea;
+  height: 100%;
+  float: left;
+  width: 30%;
+}
+
+.dropdown-box {
+  display: none;
+  width: 230px;
+}
+
+.show {
+  width: 70%;
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 30px;
+}
+
+h1 {
+  font-style: italic;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.list {
+ margin-top: 60px;
+ height: 200px;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0px;
+}
+
+.list-item {
+    text-align: center;
+    border-bottom: solid 1px black;
+    font-size: larger;
+    padding: 3px 0px;
+}
+
+.filter-button {
+  margin-left: 30px;
+  width: 70%;
+}
+
+.dropdown-button {
+  width: 100%;
+}
+
+.filter-box {
+  margin-top: 30px;
+}
+
+svg {
+  display: none;
+}
+
+
+
+@media screen and (max-width:600px) {
+
+ svg {
+    width: 32px;
+    display: block;
+  }
+
+  .listbox {
+    display: none;
+  }
+
+  #fulllist {
+    display: block;
+    width: 40%;
+  }
+  #map {
+    padding: 0px;
+  }
+
+  .show {
+    margin: 0 20px;
+  }
+
+  .filter-button {
+    margin: 0 20px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .list-item {
+    font-size: 17px;
+  }
+
+  .list {
+    margin-top: 40px;
+  }
+}
