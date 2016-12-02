@@ -41,42 +41,50 @@ var contents =[];
 //Place constructor for the array of favPlace
 var Place = function(data){
   var self = this;
-this.name=ko.observable(data.name);
-this.wikiName=ko.observable(data.wikiName);
-this.lat=ko.observable(data.lat);
-this.lng=ko.observable(data.lng);
-this.filter=ko.observable(data.filter);
+  this.name=ko.observable(data.name);
+  this.wikiName=ko.observable(data.wikiName);
+  this.lat=ko.observable(data.lat);
+  this.lng=ko.observable(data.lng);
+  this.filter=ko.observable(data.filter);
 
-//array to store the content of the place received from wikipedia
-this.wikiInfo=ko.observableArray([]);
+  //array to store the content of the place received from wikipedia
+  this.wikiInfo=ko.observableArray([]);
 
-//computed function to get the response from wikipedia about the places
-this.wiki =ko.computed( function() {
-  var city= self.wikiName();
-  var wikiFail= setTimeout(function(){
-    alert("Sorry unable to load Wikipedia");
-    self.wikiInfo.push("Failed to load wikipedia links");
-  },8000); //Timeout function for Wikipedia
+  //computed function to get the response from wikipedia about the places
+  this.wiki =ko.computed( function() {
+    var city= self.wikiName();
+    var wikiFail= setTimeout(function(){
+      self.wikiInfo.push("Failed to load wikipedia links");
 
-  var wikiUrl= 'http://en.wikipedia.org/w/api.php?action=opensearch&search='+city+'&format=json&callback=wikiCallback';
+      // to display the alert only once
+      var alert1 = localStorage.getItem('alert1') ||'';
+      if(alert1 !== 'displayed'){
+        alert("Failed to load wikipedia links");
+        self.wikiInfo.push("Failed to load wikipedia links");
+        localStorage.setItem('alert1','displayed');
+      }
+    },8000); //Timeout function for Wikipedia
 
-//Ajax function to get the response from wikipedia
-  $.ajax({
-    url: wikiUrl,
-    dataType: "jsonp",
-  }).done(function(response){
-   var articles =response[2];
-     self.wikiInfo.push(articles);
-      contents.push(articles);
-  clearTimeout(wikiFail);
-});
-})
+    var wikiUrl= 'http://en.wikipedia.org/w/api.php?action=opensearch&search='+city+'&format=json&callback=wikiCallback';
+
+    //Ajax function to get the response from wikipedia
+    $.ajax({
+      url: wikiUrl,
+      dataType: "jsonp",
+    }).done(function(response){
+     var articles =response[2];
+       self.wikiInfo.push(articles);
+        contents.push(articles);
+    clearTimeout(wikiFail);
+    });
+  })
 }
 
 
 //ViewModel function for the application
 var viewModel = function(){
-    var self= this;
+  var self= this;
+  localStorage.removeItem('alert1');
   this.places = ko.observableArray([]);
   this.placeList=ko.observableArray([]);
 
