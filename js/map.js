@@ -6,10 +6,10 @@ var markers=[];
 
   var contentInfo= [];
 //timeout function for map if it fails to load
-var mapFail = setTimeout(function(){
+var mapFail = function(){
   alert("Sorry unable to load Google Map");
   $("#map").append('Hey sorry Failed to load the map');
-},8000);
+};
 
 //intialisation of the callback initMap() function
  function initMap() {
@@ -124,7 +124,7 @@ var mapFail = setTimeout(function(){
           infowindow.open(map, marker);
           // Make sure the marker property is cleared if the infowindow is closed.
           infowindow.addListener('closeclick',function(){
-          infowindow.setMarker(null);
+          infowindow.setContent(null);
           });
         }
      }

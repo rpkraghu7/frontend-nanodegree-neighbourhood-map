@@ -56,8 +56,15 @@ this.wikiInfo=ko.observableArray([]);
 this.wiki =ko.computed( function() {
   var city= self.wikiName();
   var wikiFail= setTimeout(function(){
-    alert("Sorry unable to load Wikipedia");
     self.wikiInfo.push("Failed to load wikipedia links");
+
+    // to display the alert only once
+    var alert1 = localStorage.getItem('alert1') ||'';
+    if(alert1 !== 'displayed'){
+      alert("Failed to load wikipedia links");
+      self.wikiInfo.push("Failed to load wikipedia links");
+      localStorage.setItem('alert1','displayed');
+    }
   },8000); //Timeout function for Wikipedia
 
   var wikiUrl= 'http://en.wikipedia.org/w/api.php?action=opensearch&search='+city+'&format=json&callback=wikiCallback';
@@ -84,6 +91,8 @@ this.wiki =ko.computed( function() {
 //ViewModel function for the application
 var viewModel = function(){
     var self= this;
+      localStorage.removeItem('alert1');
+      //created this array for the filter functions of location
   this.places = ko.observableArray([]);
   this.placeList=ko.observableArray([]);
 
