@@ -4,11 +4,12 @@ var map;
 //creating the markers array to store the markers created
 var markers=[];
 
+  var contentInfo= [];
 //timeout function for map if it fails to load
-var mapFail = function(){
+var mapFail = setTimeout(function(){
   alert("Sorry unable to load Google Map");
   $("#map").append('Hey sorry Failed to load the map');
-}
+},8000);
 
 //intialisation of the callback initMap() function
  function initMap() {
@@ -49,14 +50,29 @@ var mapFail = function(){
       //creating a object for the infowindow to popup on the marker
     var Infowindow = new google.maps.InfoWindow();
 
-      //adding eventListener to marker to popup
+    console.log(marker.title);
+
     marker.addListener('click', function() {
-            populateInfoWindow(this, Infowindow,contents[0]);
+            //populateInfoWindow(this, Infowindow,contentInfo[i]);
             toggleBounce(this);
+            displayMarkerInfo(this,Infowindow);
           });
 
  }
 
+
+ displayMarkerInfo= function(marker,InfoWIndow){
+
+   for(var i=0;i<contents.length;i++){
+     if(contents[i].title===marker.title){
+       //console.log(contents[i].content);
+       var content= contents[i].content
+       populateInfoWindow(marker, Infowindow,content);
+     }
+     //console.log(contents);
+     //console.log(marker.title);
+   }
+ }
 //bounce animation function for markers to toggle the bounce
  function toggleBounce(marker) {
           marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -97,7 +113,7 @@ var mapFail = function(){
 } //end of initMap()
 
 
- // This function populates the infowindow when the marker is clicked. Which will only allow
+    // This function populates the infowindow when the marker is clicked. Which will only allow
     // one infowindow which will open at the marker that is clicked, and populate based
     // on that markers position.
     function populateInfoWindow(marker,infowindow,content) {

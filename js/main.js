@@ -7,7 +7,7 @@ var favPlace=[
     lng: 80.2824,
     filter:0
   },{
-    name: 'Forum Vijaya Mall,Chennai',
+    name: 'The Forum Vijaya',
     wikiName: 'The Forum Vijaya',
     lat: 13.0490,
     lng: 80.2080,
@@ -36,55 +36,54 @@ var favPlace=[
 
 //Array to store the response from wikipedia API
 var contents =[];
-
+setTimeout(function(){
+  console.log(contents);
+},2000);
 
 //Place constructor for the array of favPlace
 var Place = function(data){
   var self = this;
-  this.name=ko.observable(data.name);
-  this.wikiName=ko.observable(data.wikiName);
-  this.lat=ko.observable(data.lat);
-  this.lng=ko.observable(data.lng);
-  this.filter=ko.observable(data.filter);
+this.name=ko.observable(data.name);
+this.wikiName=ko.observable(data.wikiName);
+this.lat=ko.observable(data.lat);
+this.lng=ko.observable(data.lng);
+this.filter=ko.observable(data.filter);
 
-  //array to store the content of the place received from wikipedia
-  this.wikiInfo=ko.observableArray([]);
+//array to store the content of the place received from wikipedia
+this.wikiInfo=ko.observableArray([]);
 
-  //computed function to get the response from wikipedia about the places
-  this.wiki =ko.computed( function() {
-    var city= self.wikiName();
-    var wikiFail= setTimeout(function(){
-      self.wikiInfo.push("Failed to load wikipedia links");
+//computed function to get the response from wikipedia about the places
+this.wiki =ko.computed( function() {
+  var city= self.wikiName();
+  var wikiFail= setTimeout(function(){
+    alert("Sorry unable to load Wikipedia");
+    self.wikiInfo.push("Failed to load wikipedia links");
+  },8000); //Timeout function for Wikipedia
 
-      // to display the alert only once
-      var alert1 = localStorage.getItem('alert1') ||'';
-      if(alert1 !== 'displayed'){
-        alert("Failed to load wikipedia links");
-        self.wikiInfo.push("Failed to load wikipedia links");
-        localStorage.setItem('alert1','displayed');
+  var wikiUrl= 'http://en.wikipedia.org/w/api.php?action=opensearch&search='+city+'&format=json&callback=wikiCallback';
+
+//Ajax function to get the response from wikipedia
+  $.ajax({
+    url: wikiUrl,
+    dataType: "jsonp",
+  }).done(function(response){
+    console.log(response[0]);
+   var articles =response[2];
+     self.wikiInfo.push(articles[0]);
+      var res ={
+        title: response[0],
+        content: articles[0]
       }
-    },8000); //Timeout function for Wikipedia
-
-    var wikiUrl= 'http://en.wikipedia.org/w/api.php?action=opensearch&search='+city+'&format=json&callback=wikiCallback';
-
-    //Ajax function to get the response from wikipedia
-    $.ajax({
-      url: wikiUrl,
-      dataType: "jsonp",
-    }).done(function(response){
-     var articles =response[2];
-       self.wikiInfo.push(articles);
-        contents.push(articles);
-    clearTimeout(wikiFail);
-    });
-  })
+      contents.push(res);
+  clearTimeout(wikiFail);
+});
+})
 }
 
 
 //ViewModel function for the application
 var viewModel = function(){
-  var self= this;
-  localStorage.removeItem('alert1');
+    var self= this;
   this.places = ko.observableArray([]);
   this.placeList=ko.observableArray([]);
 
@@ -95,22 +94,22 @@ var viewModel = function(){
   });
 
   this.filterList =ko.observableArray([]);
-  //function to display the information on button click
-  this.displayMarker = function(item){
-    //console.log(item);
-    var name=item.name();
-    var content=item.wikiInfo()[0];
-    displayInfo(name,content);
+//function to display the information on button click
+   this.displayMarker = function(item){
+     //console.log(item);
+     var name=item.name();
+     var content=item.wikiInfo()[0];
+     displayInfo(name,content);
    }
 
-  //variable with class of drop-down
-  this.dropItem = ko.observable('dropdown-box')
+   //variable with class of drop-down
+   this.dropItem = ko.observable('dropdown-box')
 
-  //count for displaying dropdown for filter
-  this.count = ko.observable(0);
+   //count for displaying dropdown for filter
+   this.count = ko.observable(0);
 
-  //function for the dropdown menu to appear
-  this.drop = function(item){
+   //function for the dropdown menu to appear
+   this.drop = function(item){
      if(self.count()===0){
        self.dropItem('dropdown-box'+' '+'show');
        self.count(1);
@@ -120,40 +119,40 @@ var viewModel = function(){
      }
    }
 
-  this.list=ko.observable('');
-  this.count1 =ko.observable(0);
+    this.list=ko.observable('');
+    this.count1 =ko.observable(0);
 
-  //function to display the list in responsive window
-  this.displayMenu = function(){
-    if(self.count1() ===0){
-      self.list('fulllist');
-      self.count1(1);
-    }else{
-      self.list('');
-      self.count1(0);
-    }
-  }
-
-  //function to display shop locations when selected on the site
-  this.displayShoopingLocations = function(item){
-    var place = item.places();
-    self.placeList(['']);
-
-    for(var i=0;i<place.length;i++){
-      if(place[i].filter()===0){
-        self.placeList.push(place[i]);
-          var num =place[i].filter();
-        filterMarker(num);
+    //function to display the list in responsive window
+    this.displayMenu = function(){
+      if(self.count1() ===0){
+        self.list('fulllist');
+        self.count1(1);
+      }else{
+        self.list('');
+        self.count1(0);
       }
     }
-  }
+
+    //function to display shop locations when selected on the site
+    this.displayShoopingLocations = function(item){
+      var place = item.places();
+      self.placeList(['']);
+
+      for(var i=0;i<place.length;i++){
+        if(place[i].filter()===0){
+          self.placeList.push(place[i]);
+            var num =place[i].filter();
+          filterMarker(num);
+        }
+      }
+    }
 
     //function to display Area name when selected on the site
-  this.displayArea = function(item){
-    var place = item.places();
-    self.placeList(['']);
+    this.displayArea = function(item){
+      var place = item.places();
+      self.placeList(['']);
 
-    for(var i=0;i<place.length;i++){
+      for(var i=0;i<place.length;i++){
         if(place[i].filter()===1){
           self.placeList.push(place[i]);
           var num =place[i].filter();
@@ -168,10 +167,10 @@ var viewModel = function(){
       self.placeList(['']);
 
       for(var i=0;i<place.length;i++){
-        self.placeList.push(place[i]);
-          var num =place[i].filter();
-          filterAllMarker(num);
-        }
+          self.placeList.push(place[i]);
+            var num =place[i].filter();
+            filterAllMarker(num);
+      }
     }
 
 } //end of viewModel
